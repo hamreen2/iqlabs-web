@@ -178982,7 +178982,7 @@ s=q}for(;;)switch(s){case 0:q=3
 n=$.ae().b
 n===$&&A.b()
 s=6
-return A.c(n.gf4().Lv(a,"https://iqlabs.online/#/reset-password"),$async$ME)
+return A.c(n.gf4().Lv(a,"https://iqlabs.online/"),$async$ME)
 case 6:q=1
 s=5
 break
