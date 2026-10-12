@@ -32,6 +32,12 @@
 
   <title>IQ Labs</title>
   <link rel="manifest" href="manifest.json">
+
+  <!-- pdf.js (3.2.146, the version the `printing` package expects) for sharing
+       a one-page document as an image: served from this site instead of the
+       package's default unpkg.com, which phones in Iraq don't always reach --
+       a failed load silently fell back to sharing a PDF (Almass, 2026-10-13). -->
+  <script>var dartPdfJsBaseUrl = "pdfjs/";</script>
 </head>
 <body>
   <script src="flutter_bootstrap.js" async></script>
