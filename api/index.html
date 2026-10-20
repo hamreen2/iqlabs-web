@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>IQ Labs API</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: sticky contents rail beside one reading column; rail becomes a top strip on phones. */
+:root {
+  --bg: #f7f7fb;
+  --surface: #ffffff;
+  --ink: #1b1d2b;
+  --muted: #5b5f78;
+  --line: #e2e3ee;
+  --accent: #4b45c6;
+  --accent-tint: #ecebfb;
+  --code-bg: #f1f1f8;
+  --get: #11795b;
+  --get-tint: #e2f4ed;
+  --post: #9a5a06;
+  --post-tint: #fbefdc;
+  --warn: #a8321f;
+  --font-body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12131c; --surface: #1a1c28; --ink: #e8e8f2; --muted: #a2a5bf; --line: #2c2f42;
+    --accent: #a19dff; --accent-tint: #26244a; --code-bg: #20222f;
+    --get: #5fd3a9; --get-tint: #17352b; --post: #f0b45c; --post-tint: #3a2b14; --warn: #ff8a73;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12131c; --surface: #1a1c28; --ink: #e8e8f2; --muted: #a2a5bf; --line: #2c2f42;
+  --accent: #a19dff; --accent-tint: #26244a; --code-bg: #20222f;
+  --get: #5fd3a9; --get-tint: #17352b; --post: #f0b45c; --post-tint: #3a2b14; --warn: #ff8a73;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink);
+  font: 16px/1.6 var(--font-body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.wrap { max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 48px; padding-block: 40px 80px; }
+nav.toc { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 24px); align-self: start; font-size: 14.5px; }
+nav.toc .brand { font-weight: 700; font-size: 15px; margin-bottom: 14px; color: var(--accent); letter-spacing: .02em; }
+nav.toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+nav.toc a { color: var(--muted); text-decoration: none; display: block; padding: 3px 10px; border-left: 2px solid var(--line); }
+nav.toc a:hover, nav.toc a:focus-visible { color: var(--ink); border-left-color: var(--accent); outline: none; }
+main { min-width: 0; }
+header.top { margin-bottom: 28px; }
+.eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+h1 { font-size: 40px; line-height: 1.15; margin: 6px 0 12px; text-wrap: balance; }
+h2 { font-size: 26px; line-height: 1.25; margin: 48px 0 12px; padding-top: 8px; text-wrap: balance; scroll-margin-top: 24px; }
+h3 { font-size: 18px; margin: 28px 0 8px; }
+p, li { max-width: 68ch; }
+.lede { font-size: 18.5px; color: var(--muted); max-width: 62ch; }
+a { color: var(--accent); }
+code { font-family: var(--font-mono); font-size: .88em; background: var(--code-bg); padding: 1px 5px; border-radius: 4px; }
+.code { position: relative; margin: 12px 0 18px; }
+.code pre { margin: 0; background: var(--code-bg); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; overflow-x: auto; font: 13.5px/1.55 var(--font-mono); }
+.code pre code { background: none; padding: 0; font-size: inherit; }
+.code button { position: absolute; top: 8px; right: 8px; font: 600 12px var(--font-body); color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 3px 9px; cursor: pointer; }
+.code button:hover, .code button:focus-visible { color: var(--ink); border-color: var(--accent); outline: none; }
+.callout { background: var(--accent-tint); border-radius: 8px; padding: 12px 16px; margin: 16px 0; max-width: 72ch; }
+.callout.warn { background: transparent; border: 1px solid var(--warn); }
+.callout.warn strong { color: var(--warn); }
+.table-wrap { overflow-x: auto; margin: 12px 0 18px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 15px; }
+th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 12.5px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); font-weight: 600; }
+tr:last-child td { border-bottom: none; }
+td code { white-space: nowrap; }
+.m { display: inline-block; font: 600 11.5px var(--font-mono); padding: 1px 7px; border-radius: 4px; min-width: 44px; text-align: center; }
+.m.get { color: var(--get); background: var(--get-tint); }
+.m.post { color: var(--post); background: var(--post-tint); }
+.route { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 30px 0 6px; }
+.route h3 { margin: 0; font: 600 16px var(--font-mono); }
+.steps { counter-reset: s; list-style: none; padding: 0; display: grid; gap: 12px; }
+.steps li { counter-increment: s; position: relative; padding-left: 38px; }
+.steps li::before { content: counter(s); position: absolute; left: 0; top: 1px; width: 26px; height: 26px; border-radius: 50%; background: var(--accent); color: var(--surface); font: 700 13px/26px var(--font-body); text-align: center; }
+footer { margin-top: 56px; color: var(--muted); font-size: 14px; border-top: 1px solid var(--line); padding-top: 16px; }
+@media (max-width: 860px) {
+  .wrap { grid-template-columns: minmax(0, 1fr); gap: 16px; padding-block: 24px 64px; }
+  nav.toc { position: static; }
+  nav.toc ol { display: flex; flex-wrap: wrap; gap: 6px; }
+  nav.toc a { border: 1px solid var(--line); border-radius: 999px; padding: 2px 10px; }
+  h1 { font-size: 32px; }
+}
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+</style>
+<style>html{color-scheme:light}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+
+<div class="wrap">
+  <nav class="toc" aria-label="Contents">
+    <div class="brand">IQ Labs API v1</div>
+    <ol>
+      <li><a href="#start">Getting started</a></li>
+      <li><a href="#auth">Your API key</a></li>
+      <li><a href="#endpoints">Endpoints</a></li>
+      <li><a href="#create">Creating a case</a></li>
+      <li><a href="#files">Uploading files</a></li>
+      <li><a href="#webhooks">Webhooks</a></li>
+      <li><a href="#errors">Errors</a></li>
+      <li><a href="#telegram">Telegram bot recipe</a></li>
+      <li><a href="#notes">Limits and notes</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <header class="top">
+      <div class="eyebrow">For developers and automation builders</div>
+      <h1>IQ Labs API</h1>
+      <p class="lede">Connect your lab's IQ Labs account to your own tools: a Telegram bot, n8n, Make, or your own software. Your program can find doctors, create cases, upload scans and photos, and follow each case through production. IQ Labs can also notify your program the moment a case arrives or changes stage.</p>
+    </header>
+
+    <section id="start">
+      <h2>Getting started</h2>
+      <ol class="steps">
+        <li>In IQ Labs, sign in as an <strong>admin</strong> and open <strong>Settings → Integrations</strong>.</li>
+        <li>Choose <strong>Create API key</strong>, give it a name such as "Telegram bot", and copy the key. It starts with <code>iql_</code> and is shown only once.</li>
+        <li>Call the API from your tool. Try this first; it returns your lab's name if everything is set up:</li>
+      </ol>
+      <div class="code"><pre><code>curl https://efjeeeztckovmtuzvefp.supabase.co/functions/v1/lab-api/v1/me \
+  -H "Authorization: Bearer iql_YOUR_KEY"</code></pre></div>
+      <p>All addresses below start with this base URL:</p>
+      <div class="code"><pre><code>https://efjeeeztckovmtuzvefp.supabase.co/functions/v1/lab-api/v1</code></pre></div>
+      <p>Requests and responses are JSON. Successful results are inside a <code>data</code> field. In the examples below, <code>$BASE</code> stands for this base URL.</p>
+    </section>
+
+    <section id="auth">
+      <h2>Your API key</h2>
+      <p>Send the key with every request, in either header:</p>
+      <div class="code"><pre><code>Authorization: Bearer iql_YOUR_KEY
+X-Api-Key: iql_YOUR_KEY</code></pre></div>
+      <ul>
+        <li>A key belongs to one lab and only ever sees that lab's data.</li>
+        <li>It acts as the admin who created it: cases it creates, accepts or advances are recorded under that admin's name.</li>
+        <li>It stops working when you revoke it in Settings, or if its admin is deactivated or is no longer an admin.</li>
+        <li>The API never returns prices, costs or payments.</li>
+      </ul>
+      <div class="callout warn"><strong>Keep the key secret.</strong> Store it in your tool's credentials (in n8n, a "Header Auth" credential), never in a message, a shared sheet or a public repository. If it leaks, revoke it and create a new one.</div>
+    </section>
+
+    <section id="endpoints">
+      <h2>Endpoints</h2>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Method</th><th>Path</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td><span class="m get">GET</span></td><td><code>/me</code></td><td>Your lab and which key is calling. Use it to test the connection.</td></tr>
+          <tr><td><span class="m get">GET</span></td><td><code>/doctors</code></td><td>Your lab's doctors. Filters: <code>phone</code>, <code>search</code> (name), <code>include_inactive</code>, <code>limit</code>, <code>offset</code>.</td></tr>
+          <tr><td><span class="m get">GET</span></td><td><code>/doctors/{id}</code></td><td>One doctor, with their clinic.</td></tr>
+          <tr><td><span class="m get">GET</span></td><td><code>/catalog</code></td><td>Case types with their materials, shades and production stages, for building your menus.</td></tr>
+          <tr><td><span class="m get">GET</span></td><td><code>/stages</code></td><td>Every stage your lab uses, in board order.</td></tr>
+          <tr><td><span class="m get">GET</span></td><td><code>/cases</code></td><td>Cases, newest first. Filters: <code>doctor_id</code>, <code>stage_id</code>, <code>search</code> (patient or case number), <code>updated_since</code>, <code>include_cancelled</code>, <code>limit</code> (max 200), <code>offset</code>.</td></tr>
+          <tr><td><span class="m post">POST</span></td><td><code>/cases</code></td><td>Create a case. It arrives in <strong>Case Requests</strong>, the same as a doctor's own submission.</td></tr>
+          <tr><td><span class="m get">GET</span></td><td><code>/cases/{id}</code></td><td>One case with its pipeline, stage history and files.</td></tr>
+          <tr><td><span class="m post">POST</span></td><td><code>/cases/{id}/accept</code></td><td>Accept a request; the case moves to the first stage of its type.</td></tr>
+          <tr><td><span class="m post">POST</span></td><td><code>/cases/{id}/advance</code></td><td>Move the case one stage forward in its own pipeline.</td></tr>
+          <tr><td><span class="m post">POST</span></td><td><code>/cases/{id}/files</code></td><td>Upload a photo, video or scan to the case.</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Finding a doctor by phone</h3>
+      <p>Phone numbers match however they were typed: <code>0770 123 4567</code>, <code>+964 770 123 4567</code> and <code>009647701234567</code> are the same number. A doctor with no number of their own matches on their clinic's number, but only when they are that clinic's only doctor; a number shared by several doctors never identifies anyone. If the lookup returns no doctor, ask the lab to save the doctor's own number in IQ Labs.</p>
+      <div class="code"><pre><code>GET /doctors?phone=%2B9647701234567
+
+{
+  "data": [
+    {
+      "id": 384,
+      "name": "Dr. Mohammed Al-Abadi",
+      "phone": "0770 123 4567",
+      "is_active": true,
+      "has_portal_login": true,
+      "clinic": { "id": 54, "name": "Smile Dental Clinic", "phone": null }
+    }
+  ]
+}</code></pre></div>
+
+      <h3>What a case looks like</h3>
+      <p>Every case response, list item and webhook uses this shape. Teeth use FDI numbering (adult 11–48, primary 51–85).</p>
+      <div class="code"><pre><code>{
+  "id": 3478,
+  "case_number": 155,
+  "case_label": "LAB-155",
+  "group_id": 3478,
+  "primary_case_id": null,
+  "patient_ref": "Ali Hassan",
+  "case_type": { "id": 527, "name": "Crown", "abbreviation": "CR" },
+  "material": { "id": 482, "name": "Zirconia" },
+  "shade": { "id": 5409, "name": "A2" },
+  "adult_teeth": [11, 21],
+  "child_teeth": [],
+  "other_parts": null,
+  "due_date": "2026-10-25",
+  "is_rush": false,
+  "note": "Please match the neighbouring teeth",
+  "created_at": "2026-10-20T08:15:40Z",
+  "accepted_at": null,
+  "shipped_at": null,
+  "cancelled_at": null,
+  "submitted_by_doctor": true,
+  "doctor": { "id": 384, "name": "Dr. Mohammed Al-Abadi", "phone": "0770 123 4567" },
+  "clinic": { "id": 54, "name": "Smile Dental Clinic", "phone": null },
+  "stage": {
+    "id": 226, "name": "Requested", "color": "FF4472B8", "sort_order": -3,
+    "is_intake_stage": true, "intake_kind": "requested",
+    "is_terminal": false, "production_role": null,
+    "changed_at": "2026-10-20T08:15:40Z"
+  }
+}</code></pre></div>
+      <p>Stage names are whatever your lab calls them and can be renamed. For logic, use the stage's <code>id</code>, <code>is_terminal</code> (shipped), <code>intake_kind</code> (<code>requested</code>, <code>needs_clarification</code>, <code>declined</code>) and <code>production_role</code>.</p>
+    </section>
+
+    <section id="create">
+      <h2>Creating a case</h2>
+      <div class="code"><pre><code>curl -X POST $BASE/cases \
+  -H "Authorization: Bearer iql_YOUR_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "doctor_id": 384,
+    "case_type_id": 527,
+    "adult_teeth": [11, 21],
+    "patient_ref": "Ali Hassan",
+    "note": "Please match the neighbouring teeth"
+  }'</code></pre></div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Field</th><th>Required</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td><code>doctor_id</code></td><td>Yes</td><td>From <code>/doctors</code>.</td></tr>
+          <tr><td><code>case_type_id</code></td><td>Yes</td><td>From <code>/catalog</code>.</td></tr>
+          <tr><td><code>material_id</code></td><td>No</td><td>Defaults to the type's default material.</td></tr>
+          <tr><td><code>shade_id</code></td><td>No</td><td>Must belong to the type or material.</td></tr>
+          <tr><td><code>adult_teeth</code>, <code>child_teeth</code></td><td>No</td><td>Arrays of FDI numbers.</td></tr>
+          <tr><td><code>patient_ref</code></td><td>No</td><td>Patient name or reference, up to 200 characters.</td></tr>
+          <tr><td><code>note</code>, <code>other_parts</code></td><td>No</td><td>Free text.</td></tr>
+          <tr><td><code>due_date</code></td><td>No</td><td><code>YYYY-MM-DD</code>. Defaults to the case type's usual number of days.</td></tr>
+          <tr><td><code>is_rush</code></td><td>No</td><td><code>true</code> marks the case urgent.</td></tr>
+          <tr><td><code>primary_case_id</code></td><td>No</td><td>Adds this case to an existing order with several case types (same doctor).</td></tr>
+        </tbody>
+      </table></div>
+      <p>The answer is <code>201</code> with the new case. The case waits in Case Requests until someone accepts it in IQ Labs (or you call <code>/accept</code>). When the doctor has an IQ Clinics login, the case is priced automatically on acceptance, like any doctor submission; otherwise the lab sets the price in Case Requests.</p>
+    </section>
+
+    <section id="files">
+      <h2>Uploading files</h2>
+      <p>Send the file as <code>multipart/form-data</code> in a field named <code>file</code>. Photos, videos, STL/PLY scans and PDFs are all accepted.</p>
+      <div class="code"><pre><code>curl -X POST $BASE/cases/3478/files \
+  -H "Authorization: Bearer iql_YOUR_KEY" \
+  -F "file=@upper_scan.stl" \
+  -F "note=Upper jaw scan"</code></pre></div>
+      <ul>
+        <li>Optional fields: <code>note</code>, <code>file_type</code> (<code>photo</code>, <code>video</code> or <code>document</code>; worked out from the file when omitted), <code>uploaded_by</code> (<code>doctor</code>, the default, or <code>lab</code>).</li>
+        <li>Up to 25 MB per file, 15 MB for a photo. Telegram bots can download files up to 20 MB.</li>
+        <li>Your lab's own attachment settings apply. If video is switched off in IQ Labs, a video upload is refused.</li>
+      </ul>
+    </section>
+
+    <section id="webhooks">
+      <h2>Webhooks</h2>
+      <p>A webhook is an address of yours that IQ Labs calls automatically. Add one in <strong>Settings → Integrations → Add webhook</strong> and pick the events:</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Event</th><th>When</th></tr></thead>
+        <tbody>
+          <tr><td><code>case.created</code></td><td>A new case is created: from the API, the IQ Clinics app, or the lab's own New Case.</td></tr>
+          <tr><td><code>case.stage_changed</code></td><td>A case moves stage: accepted, advanced on the board or by QR scan, declined, or moved back.</td></tr>
+          <tr><td><code>ping</code></td><td>You pressed <strong>Send test</strong>. It carries your lab's latest case so you can map the fields.</td></tr>
+        </tbody>
+      </table></div>
+      <p>Each event is a <code>POST</code> with these headers and a JSON body:</p>
+      <div class="code"><pre><code>Content-Type: application/json
+X-IQLabs-Event: case.stage_changed
+X-IQLabs-Secret: whsec_...
+
+{
+  "event": "case.stage_changed",
+  "event_id": 91234,
+  "occurred_at": "2026-10-21T10:02:11Z",
+  "api_version": 1,
+  "lab": { "id": 96, "name": "Basra Advanced Dental Lab" },
+  "case": { ...the case shape above, including doctor.phone... },
+  "stage": { "id": 232, "name": "Quality Check", "is_terminal": false, ... },
+  "previous_stage": { "id": 231, "name": "Fabrication", ... }
+}</code></pre></div>
+      <ul>
+        <li><strong>Check the secret.</strong> Compare <code>X-IQLabs-Secret</code> with the secret shown in Settings and ignore any request that doesn't match. In n8n, set the Webhook node's authentication to <em>Header Auth</em> with that header name and value.</li>
+        <li>Your address must start with <code>https://</code> and answer within 10 seconds. Reply with any <code>2xx</code> status.</li>
+        <li>IQ Labs sends each event once and does not retry. Settings → Integrations → <strong>Deliveries</strong> shows what was sent and how your address answered. If your service was down, catch up with <code>GET /cases?updated_since=…</code>.</li>
+        <li>An order with several case types sends one event per case; they share a <code>group_id</code>.</li>
+      </ul>
+    </section>
+
+    <section id="errors">
+      <h2>Errors</h2>
+      <p>Errors come back with a status code and a readable message:</p>
+      <div class="code"><pre><code>{ "error": { "code": "unprocessable", "message": "adult_teeth must be FDI numbers 11-18, 21-28, 31-38, 41-48" } }</code></pre></div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Status</th><th>Code</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td>400</td><td><code>bad_request</code></td><td>Something in the request can't be read: invalid JSON, a number that isn't a number, a missing file.</td></tr>
+          <tr><td>401</td><td><code>unauthorized</code></td><td>The key is missing, wrong or revoked, or its admin is no longer active.</td></tr>
+          <tr><td>403</td><td><code>forbidden</code></td><td>The lab's account is suspended.</td></tr>
+          <tr><td>404</td><td><code>not_found</code></td><td>No such route, or the doctor or case isn't in your lab.</td></tr>
+          <tr><td>422</td><td><code>unprocessable</code></td><td>Understood but not allowed: the case is cancelled, isn't accepted yet, the shade doesn't belong to the type, and similar.</td></tr>
+          <tr><td>500</td><td><code>server_error</code></td><td>A problem on our side. Try again; tell us if it continues.</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section id="telegram">
+      <h2>Telegram bot recipe</h2>
+      <p>One way to build the bot in n8n. Telegram bots are free; create one with <strong>@BotFather</strong> and add its token to n8n's Telegram credentials.</p>
+      <ol class="steps">
+        <li><strong>Know who is writing.</strong> On the doctor's first message, show Telegram's "Share my phone number" button (a reply keyboard with <code>request_contact</code>). Look the number up with <code>GET /doctors?phone=…</code> and save the Telegram chat id with the doctor's id. Accept the contact only when its <code>user_id</code> is the sender's own id.</li>
+        <li><strong>Build the menus.</strong> Load <code>GET /catalog</code> once and offer the case types, then materials and shades, as buttons.</li>
+        <li><strong>Create the case.</strong> Ask for teeth and patient name, then call <code>POST /cases</code>. Reply with the <code>case_label</code>, for example "LAB-155 received".</li>
+        <li><strong>Attach the files.</strong> For each photo or document the doctor sends, download it from Telegram and pass it to <code>POST /cases/{id}/files</code>.</li>
+        <li><strong>Tell the lab.</strong> A webhook on <code>case.created</code> posts "New case LAB-155 from Dr. …" to the lab's own Telegram chat.</li>
+        <li><strong>Tell the doctor.</strong> A webhook on <code>case.stage_changed</code> sends the doctor a message with the new <code>stage.name</code>, on Telegram (by the saved chat id) or on WhatsApp (by <code>case.doctor.phone</code>).</li>
+        <li><strong>Answer "where is my case?"</strong> with <code>GET /cases?doctor_id=…&amp;limit=5</code>.</li>
+      </ol>
+      <div class="callout"><strong>Automatic WhatsApp messages</strong> need your own WhatsApp Business Platform account from Meta: a phone number not used in the normal WhatsApp app, a verified business, and message templates Meta has approved. Meta charges per message. IQ Labs supplies the event and the doctor's number; your bot sends the message. To send a message by hand instead, at no cost, use <strong>Send via WhatsApp</strong> in a case's page in IQ Labs.</div>
+    </section>
+
+    <section id="notes">
+      <h2>Limits and notes</h2>
+      <ul>
+        <li>Up to 10 active keys and 5 webhooks per lab.</li>
+        <li><code>limit</code> on lists is 50 by default and at most 200; page with <code>offset</code>.</li>
+        <li>Lists sort newest first. Times are UTC in ISO 8601.</li>
+        <li>This is version 1. Fields may be added over time; existing fields keep their names and meaning.</li>
+        <li>Cases created by the API behave exactly like any other case in IQ Labs: they show on the Board, print, invoice and appear in reports as usual.</li>
+      </ul>
+    </section>
+
+    <footer>Questions or help setting it up: contact the IQ Labs team on WhatsApp.</footer>
+  </main>
+</div>
+
+<script>
+document.querySelectorAll('.code').forEach(function (block) {
+  var btn = document.createElement('button');
+  btn.type = 'button';
+  btn.textContent = 'Copy';
+  btn.addEventListener('click', function () {
+    var text = block.querySelector('pre').innerText;
+    var done = function () { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = 'Copy'; }, 1500); };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, function () { selectText(block); });
+    } else { selectText(block); }
+  });
+  block.appendChild(btn);
+});
+function selectText(block) {
+  var range = document.createRange();
+  range.selectNodeContents(block.querySelector('pre'));
+  var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
+}
+</script>
+
+</body>
+</html>
