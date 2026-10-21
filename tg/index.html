@@ -117,7 +117,7 @@ window.addEventListener("error", function (e) {
           another: "Send another case", noCases: "No cases yet.", back: "Back", stages: "Stages", files2: "Files", noFiles: "No files yet.",
           created: "Sent", due: "Due", owed: "Amount owed", notLinked: "Open the chat with the bot and share your phone number first.",
           openChat: "Open chat", error: "Something went wrong. Please try again.", tooBig: "Too big (max 500 MB)", filesAdded: "{n} file(s) chosen",
-          cancelled: "Cancelled", teethNone: "None chosen" },
+          cancelled: "Cancelled", teethNone: "None chosen", slow: "Slow connection, still trying…" },
     ar: { newCase: "حالة جديدة", myCases: "حالاتي", balance: "الحساب", doctor: "الطبيب", type: "نوع الحالة", material: "المادة",
           shade: "اللون", noShade: "لاحقاً", teeth: "الأسنان (FDI)", kids: "الأسنان اللبنية", patient: "اسم المريض", note: "ملاحظة للمختبر (اختياري)",
           files: "صور أو ملفات المسح (اختياري)", addFiles: "إضافة ملفات", send: "إرسال الحالة", sending: "جارٍ الإرسال…", needType: "اختر نوع الحالة.", needMaterial: "اختر المادة.",
@@ -126,7 +126,7 @@ window.addEventListener("error", function (e) {
           another: "إرسال حالة أخرى", noCases: "لا توجد حالات بعد.", back: "رجوع", stages: "المراحل", files2: "الملفات", noFiles: "لا توجد ملفات بعد.",
           created: "أُرسلت", due: "موعد التسليم", owed: "المبلغ المستحق", notLinked: "افتح المحادثة مع البوت وشارك رقم هاتفك أولاً.",
           openChat: "فتح المحادثة", error: "حدث خطأ. يرجى المحاولة مرة أخرى.", tooBig: "كبير جداً (الحد 500 ميغابايت)", filesAdded: "تم اختيار {n} ملف",
-          cancelled: "ملغاة", teethNone: "لم يُحدَّد" },
+          cancelled: "ملغاة", teethNone: "لم يُحدَّد", slow: "الاتصال بطيء، ما زلنا نحاول…" },
     ckb: { newCase: "کەیسی نوێ", myCases: "کەیسەکانم", balance: "حساب", doctor: "پزیشک", type: "جۆری کەیس", material: "ماددە",
            shade: "ڕەنگ", noShade: "دواتر", teeth: "ددانەکان (FDI)", kids: "ددانی شیری", patient: "ناوی نەخۆش", note: "تێبینی بۆ تاقیگە (ئارەزوومەندانە)",
            files: "وێنە یان فایلی سکان (ئارەزوومەندانە)", addFiles: "زیادکردنی فایل", send: "ناردنی کەیس", sending: "دەنێردرێت…", needType: "جۆری کەیس هەڵبژێرە.", needMaterial: "ماددە هەڵبژێرە.",
@@ -135,7 +135,7 @@ window.addEventListener("error", function (e) {
            another: "ناردنی کەیسێکی تر", noCases: "هێشتا هیچ کەیسێک نییە.", back: "گەڕانەوە", stages: "قۆناغەکان", files2: "فایلەکان", noFiles: "هێشتا هیچ فایلێک نییە.",
            created: "نێردرا", due: "کاتی تەسلیم", owed: "قەرز", notLinked: "سەرەتا چاتی بۆتەکە بکەرەوە و ژمارەی تەلەفۆنەکەت هاوبەش بکە.",
            openChat: "کردنەوەی چات", error: "هەڵەیەک ڕوویدا. تکایە دووبارە هەوڵ بدەرەوە.", tooBig: "زۆر گەورەیە (تا 500 MB)", filesAdded: "{n} فایل هەڵبژێردرا",
-           cancelled: "هەڵوەشاوە", teethNone: "هیچ دیاری نەکراوە" },
+           cancelled: "هەڵوەشاوە", teethNone: "هیچ دیاری نەکراوە", slow: "پەیوەندی خاوە، هێشتا هەوڵ دەدەین…" },
     kmr: { newCase: "کەیسێ نوو", myCases: "کەیسێن من", balance: "حساب", doctor: "دکتۆر", type: "جۆرێ کەیسی", material: "ماددە",
            shade: "رەنگ", noShade: "پاشان", teeth: "ددان (FDI)", kids: "ددانێن شیری", patient: "ناڤێ نەخۆشی", note: "تێبینی بۆ تاقیگەهێ (ب دلێ خۆ)",
            files: "وێنە یان فایلێن سکانێ (ب دلێ خۆ)", addFiles: "زێدەکرنا فایلان", send: "فرێکرنا کەیسی", sending: "دهێتە فرێکرن…", needType: "جۆرێ کەیسی هەلبژێرە.", needMaterial: "ماددە هەلبژێرە.",
@@ -144,7 +144,7 @@ window.addEventListener("error", function (e) {
            another: "فرێکرنا کەیسەکێ دی", noCases: "هێشتا چ کەیس نینن.", back: "زڤڕین", stages: "قوناغ", files2: "فایل", noFiles: "هێشتا چ فایل نینن.",
            created: "هاتە فرێکرن", due: "دەمێ تەسلیمێ", owed: "قەرز", notLinked: "بەری هەمیێ چاتا بۆتی ڤەکە و ژمارا تەلەفۆنا خۆ پارڤە بکە.",
            openChat: "ڤەکرنا چاتێ", error: "خەلەتیەک چێبوو. هیڤیە دووبارە هەول بدە.", tooBig: "گەلەک مەزنە (هەتا 500 MB)", filesAdded: "{n} فایل هاتنە هەلبژارتن",
-           cancelled: "هەلوەشیای", teethNone: "چ نەهاتینە دیارکرن" },
+           cancelled: "هەلوەشیای", teethNone: "چ نەهاتینە دیارکرن", slow: "پەیوەندی هێدیە، هێشتا هەول ددەین…" },
     tr: { newCase: "Yeni vaka", myCases: "Vakalarım", balance: "Bakiye", doctor: "Doktor", type: "Vaka türü", material: "Malzeme",
           shade: "Renk", noShade: "Sonra", teeth: "Dişler (FDI)", kids: "Süt dişleri", patient: "Hasta adı", note: "Laboratuvar için not (isteğe bağlı)",
           files: "Fotoğraf veya tarama dosyaları (isteğe bağlı)", addFiles: "Dosya ekle", send: "Vakayı gönder", sending: "Gönderiliyor…", needType: "Vaka türü seçin.", needMaterial: "Malzeme seçin.",
@@ -153,7 +153,7 @@ window.addEventListener("error", function (e) {
           another: "Başka vaka gönder", noCases: "Henüz vaka yok.", back: "Geri", stages: "Aşamalar", files2: "Dosyalar", noFiles: "Henüz dosya yok.",
           created: "Gönderildi", due: "Teslim", owed: "Borç", notLinked: "Önce botla sohbeti açıp telefon numaranızı paylaşın.",
           openChat: "Sohbeti aç", error: "Bir sorun oluştu. Lütfen tekrar deneyin.", tooBig: "Çok büyük (en fazla 500 MB)", filesAdded: "{n} dosya seçildi",
-          cancelled: "İptal edildi", teethNone: "Seçilmedi" }
+          cancelled: "İptal edildi", teethNone: "Seçilmedi", slow: "Bağlantı yavaş, hâlâ deneniyor…" }
   };
 
   var tg = window.Telegram && window.Telegram.WebApp;
@@ -181,7 +181,9 @@ window.addEventListener("error", function (e) {
     document.documentElement.lang = lang; document.documentElement.dir = RTL[lang] ? "rtl" : "ltr";
   }
   function call(url, body) {
-    return fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) })
+    // text/plain = a "simple" request: no extra preflight round trip on slow
+    // connections (both functions read the JSON body regardless).
+    return fetch(url, { method: "POST", headers: { "Content-Type": "text/plain" }, body: JSON.stringify(body) })
       .then(function (r) { return r.json().then(function (j) { j.__status = r.status; return j; }); });
   }
   function app(action, extra) {
@@ -497,12 +499,15 @@ window.addEventListener("error", function (e) {
     main.innerHTML = ""; main.appendChild(el("div", { "class": "card center", text: t.notLinked }));
     return;
   }
-  var watchdog = setTimeout(function () {
-    window.__tgReport("me timeout");
-    main.innerHTML = ""; main.appendChild(el("div", { "class": "card center", text: t.error }));
+  var slowNote = setTimeout(function () {
+    main.innerHTML = ""; main.appendChild(el("div", { "class": "card center muted", text: t.slow }));
   }, 12000);
+  var watchdog = setTimeout(function () {
+    window.__tgReport("me timeout 45s");
+    main.innerHTML = ""; main.appendChild(el("div", { "class": "card center", text: t.error }));
+  }, 45000);
   app("me").then(function (r) {
-    clearTimeout(watchdog);
+    clearTimeout(watchdog); clearTimeout(slowNote);
     if (r.language) setLang(r.language);
     if (!r.linked) {
       main.innerHTML = "";
@@ -514,7 +519,7 @@ window.addEventListener("error", function (e) {
     if (!me.doctors.length) { main.innerHTML = ""; main.appendChild(el("div", { "class": "card center", text: t.notLinked })); return; }
     go(view);
   }).catch(function (e) {
-    clearTimeout(watchdog); window.__tgReport("me failed: " + (e && e.message));
+    clearTimeout(watchdog); clearTimeout(slowNote); window.__tgReport("me failed: " + (e && e.message));
     main.innerHTML = ""; main.appendChild(el("p", { "class": "err", text: t.error }));
   });
 })();
