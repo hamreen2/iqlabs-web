@@ -367,8 +367,12 @@ window.addEventListener("error", function (e) {
       el("button", { type: "button", "class": "toggle", on: { click: function () { form.kids = !form.kids; renderNew(); } } }, [(form.kids ? "− " : "+ ") + t.kids])
     ]));
 
-    var pat = el("input", { type: "text", maxlength: "200", value: form.patient, on: { input: function (e) { form.patient = e.target.value; } } });
-    var note = el("textarea", { maxlength: "1900", on: { input: function (e) { form.note = e.target.value; } } });
+    // No autofill: phones offered saved e-mails here and the list hid the keyboard.
+    var pat = el("input", { type: "text", maxlength: "200", value: form.patient, name: "iql-patient-ref", autocomplete: "off",
+                            autocorrect: "off", spellcheck: "false", "data-lpignore": "true", "data-form-type": "other",
+                            on: { input: function (e) { form.patient = e.target.value; } } });
+    var note = el("textarea", { maxlength: "1900", name: "iql-case-note", autocomplete: "off", "data-lpignore": "true",
+                               on: { input: function (e) { form.note = e.target.value; } } });
     note.value = form.note;
     main.appendChild(el("div", { "class": "card" }, [el("p", { "class": "label", text: t.patient }), pat,
       el("div", { "class": "spacer" }), el("p", { "class": "label", text: t.note }), note]));
