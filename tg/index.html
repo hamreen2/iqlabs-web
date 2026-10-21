@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>IQ Labs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700&display=swap">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+/* Telegram Mini App for doctors (v292): New case / My cases / Balance.
+   Colours follow the Telegram theme (--tg-theme-*), with our own fallbacks. */
+:root {
+  --bg: var(--tg-theme-bg-color, #ffffff); --bg2: var(--tg-theme-secondary-bg-color, #f2f3f7);
+  --ink: var(--tg-theme-text-color, #1b1d2b); --muted: var(--tg-theme-hint-color, #6b6f86);
+  --accent: var(--tg-theme-button-color, #4b45c6); --accent-ink: var(--tg-theme-button-text-color, #ffffff);
+  --link: var(--tg-theme-link-color, #4b45c6); --line: rgba(127, 127, 140, .25);
+  --ok: #11795b; --err: #c0392b;
+  --font: "Vazirmatn", "Segoe UI", system-ui, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--bg2); color: var(--ink); font: 15.5px/1.5 var(--font); padding-bottom: 40px; }
+.top { position: sticky; top: 0; z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line); padding: 10px 14px 0; }
+.lab { font-size: 12.5px; color: var(--muted); }
+.who { font-weight: 700; font-size: 16px; margin-bottom: 8px; overflow-wrap: anywhere; }
+.tabs { display: flex; gap: 4px; overflow-x: auto; }
+.tab { flex: 1 0 auto; font: 600 14px var(--font); color: var(--muted); background: none; border: 0; border-bottom: 2.5px solid transparent; padding: 8px 10px; cursor: pointer; }
+.tab[aria-selected="true"] { color: var(--accent); border-bottom-color: var(--accent); }
+main { padding: 12px 12px 0; max-width: 640px; margin: 0 auto; }
+.card { background: var(--bg); border-radius: 14px; padding: 14px; margin-bottom: 12px; }
+.label { font-size: 13px; color: var(--muted); margin: 0 0 8px; font-weight: 600; }
+.chips { display: flex; flex-wrap: wrap; gap: 7px; }
+.chip { font: 600 14px var(--font); color: var(--ink); background: var(--bg2); border: 1.5px solid transparent; border-radius: 10px; padding: 8px 12px; cursor: pointer; min-height: 40px; }
+.chip[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+input[type=text], textarea { width: 100%; font: 16px var(--font); color: var(--ink); background: var(--bg2); border: 1.5px solid transparent; border-radius: 10px; padding: 10px 12px; }
+input[type=text]:focus, textarea:focus { outline: none; border-color: var(--accent); }
+textarea { min-height: 76px; resize: vertical; }
+.btn { display: block; width: 100%; font: 700 16px var(--font); color: var(--accent-ink); background: var(--accent); border: 0; border-radius: 12px; padding: 13px; cursor: pointer; }
+.btn[disabled] { opacity: .5; cursor: default; }
+.btn.ghost { background: var(--bg2); color: var(--accent); }
+.err { color: var(--err); font-size: 14px; margin: 8px 0 0; }
+.muted { color: var(--muted); font-size: 13.5px; }
+/* FDI chart: always left-to-right (quadrant order is anatomical). */
+.chart { direction: ltr; display: grid; gap: 6px; }
+.jaw { display: grid; grid-template-columns: repeat(16, minmax(0, 1fr)); gap: 3px; }
+.jaw.kid { grid-template-columns: repeat(10, minmax(0, 1fr)); padding: 0 14%; }
+.tooth { font: 600 12px var(--font); color: var(--ink); background: var(--bg2); border: 0; border-radius: 7px; padding: 8px 0; cursor: pointer; min-width: 0; }
+.tooth[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+.tooth.mid { margin-left: 5px; }
+.mline { border-top: 1px dashed var(--line); margin: 2px 0; }
+.toggle { font: 600 13px var(--font); color: var(--link); background: none; border: 0; padding: 6px 0 0; cursor: pointer; }
+.files li, .list li { list-style: none; }
+ul { padding: 0; margin: 0; }
+.file { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; padding: 8px 0; border-bottom: 1px solid var(--line); }
+.file:last-child { border-bottom: 0; }
+.fname { overflow-wrap: anywhere; min-width: 0; }
+.fstate { font-size: 12.5px; color: var(--muted); white-space: nowrap; }
+.fstate.ok { color: var(--ok); } .fstate.err { color: var(--err); }
+.bar { height: 5px; background: var(--bg2); border-radius: 9px; overflow: hidden; margin-top: 4px; }
+.bar i { display: block; height: 100%; width: 0; background: var(--accent); }
+.case { display: block; width: 100%; text-align: start; font: inherit; color: inherit; background: var(--bg); border: 0; border-radius: 14px; padding: 12px 14px; margin-bottom: 8px; cursor: pointer; }
+.case .row { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+.case b { font-size: 15px; }
+.stage { display: inline-block; font-size: 12.5px; font-weight: 600; color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, transparent); border-radius: 8px; padding: 2px 8px; margin-top: 4px; }
+.stage.done { color: var(--ok); background: color-mix(in srgb, var(--ok) 14%, transparent); }
+.steps { margin: 4px 0 0; }
+.step { display: flex; gap: 10px; align-items: center; padding: 5px 0; color: var(--muted); }
+.step i { width: 12px; height: 12px; border-radius: 50%; background: var(--line); flex: 0 0 auto; }
+.step.past { color: var(--ink); } .step.past i { background: var(--ok); }
+.step.now { color: var(--accent); font-weight: 700; } .step.now i { background: var(--accent); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 22%, transparent); }
+.kv { display: flex; justify-content: space-between; gap: 10px; padding: 4px 0; }
+.kv span:first-child { color: var(--muted); }
+.big { font-size: 26px; font-weight: 700; direction: ltr; unicode-bidi: isolate; }
+.center { text-align: center; padding: 26px 8px; }
+.ltr { direction: ltr; unicode-bidi: isolate; }
+@media (max-width: 400px) { .jaw { gap: 2px; } .tooth { font-size: 10.5px; padding: 7px 0; border-radius: 6px; } .tooth.mid { margin-left: 3px; } main { padding: 10px 8px 0; } .card { padding: 12px 10px; } }
+.spacer { height: 10px; }
+</style>
+</head>
+<body>
+<div class="top" id="top"></div>
+<main id="main"><div class="center muted">…</div></main>
+
+<script src="https://cdn.jsdelivr.net/npm/tus-js-client@4.1.0/dist/tus.min.js"></script>
+<script>
+(function () {
+  var APP = "https://efjeeeztckovmtuzvefp.supabase.co/functions/v1/telegram-app";
+  var UPL = "https://efjeeeztckovmtuzvefp.supabase.co/functions/v1/case-upload";
+  var TUS = "https://efjeeeztckovmtuzvefp.storage.supabase.co/storage/v1/upload/resumable/sign";
+  var APIKEY = "sb_publishable_f-apqI_p1ob8DYGS2or2Ug_mfZFLTZV";
+  var RTL = { ar: 1, ckb: 1, kmr: 1 };
+
+  var T = {
+    en: { newCase: "New case", myCases: "My cases", balance: "Balance", doctor: "Doctor", type: "Case type", material: "Material",
+          shade: "Shade", noShade: "Later", teeth: "Teeth (FDI)", kids: "Primary teeth", patient: "Patient name", note: "Note for the lab (optional)",
+          files: "Photos or scan files (optional)", addFiles: "Add files", send: "Send case", sending: "Sending…", needType: "Choose a case type.", needMaterial: "Choose a material.",
+          needPatient: "Enter the patient's name.", sent: "Case {label} was sent ✓", sentHelp: "You'll get a Telegram message at every stage.",
+          uploading: "Uploading {p}%", saving: "Saving…", done: "Added ✓", failed: "Failed", retry: "Try again", close: "Close",
+          another: "Send another case", noCases: "No cases yet.", back: "Back", stages: "Stages", files2: "Files", noFiles: "No files yet.",
+          created: "Sent", due: "Due", owed: "Amount owed", notLinked: "Open the chat with the bot and share your phone number first.",
+          openChat: "Open chat", error: "Something went wrong. Please try again.", tooBig: "Too big (max 500 MB)", filesAdded: "{n} file(s) chosen",
+          cancelled: "Cancelled", teethNone: "None chosen" },
+    ar: { newCase: "حالة جديدة", myCases: "حالاتي", balance: "الحساب", doctor: "الطبيب", type: "نوع الحالة", material: "المادة",
+          shade: "اللون", noShade: "لاحقاً", teeth: "الأسنان (FDI)", kids: "الأسنان اللبنية", patient: "اسم المريض", note: "ملاحظة للمختبر (اختياري)",
+          files: "صور أو ملفات المسح (اختياري)", addFiles: "إضافة ملفات", send: "إرسال الحالة", sending: "جارٍ الإرسال…", needType: "اختر نوع الحالة.", needMaterial: "اختر المادة.",
+          needPatient: "اكتب اسم المريض.", sent: "أُرسلت الحالة {label} ✓", sentHelp: "ستصلك رسالة على تيليجرام في كل مرحلة.",
+          uploading: "جارٍ الرفع {p}%", saving: "جارٍ الحفظ…", done: "أُضيف ✓", failed: "فشل", retry: "إعادة المحاولة", close: "إغلاق",
+          another: "إرسال حالة أخرى", noCases: "لا توجد حالات بعد.", back: "رجوع", stages: "المراحل", files2: "الملفات", noFiles: "لا توجد ملفات بعد.",
+          created: "أُرسلت", due: "موعد التسليم", owed: "المبلغ المستحق", notLinked: "افتح المحادثة مع البوت وشارك رقم هاتفك أولاً.",
+          openChat: "فتح المحادثة", error: "حدث خطأ. يرجى المحاولة مرة أخرى.", tooBig: "كبير جداً (الحد 500 ميغابايت)", filesAdded: "تم اختيار {n} ملف",
+          cancelled: "ملغاة", teethNone: "لم يُحدَّد" },
+    ckb: { newCase: "کەیسی نوێ", myCases: "کەیسەکانم", balance: "حساب", doctor: "پزیشک", type: "جۆری کەیس", material: "ماددە",
+           shade: "ڕەنگ", noShade: "دواتر", teeth: "ددانەکان (FDI)", kids: "ددانی شیری", patient: "ناوی نەخۆش", note: "تێبینی بۆ تاقیگە (ئارەزوومەندانە)",
+           files: "وێنە یان فایلی سکان (ئارەزوومەندانە)", addFiles: "زیادکردنی فایل", send: "ناردنی کەیس", sending: "دەنێردرێت…", needType: "جۆری کەیس هەڵبژێرە.", needMaterial: "ماددە هەڵبژێرە.",
+           needPatient: "ناوی نەخۆش بنووسە.", sent: "کەیسی {label} نێردرا ✓", sentHelp: "لە هەر قۆناغێکدا نامەیەکی تەلەگرامت بۆ دێت.",
+           uploading: "ئەپڵۆد دەکرێت {p}%", saving: "پاشەکەوت دەکرێت…", done: "زیاد کرا ✓", failed: "سەرنەکەوت", retry: "دووبارە هەوڵبدەرەوە", close: "داخستن",
+           another: "ناردنی کەیسێکی تر", noCases: "هێشتا هیچ کەیسێک نییە.", back: "گەڕانەوە", stages: "قۆناغەکان", files2: "فایلەکان", noFiles: "هێشتا هیچ فایلێک نییە.",
+           created: "نێردرا", due: "کاتی تەسلیم", owed: "قەرز", notLinked: "سەرەتا چاتی بۆتەکە بکەرەوە و ژمارەی تەلەفۆنەکەت هاوبەش بکە.",
+           openChat: "کردنەوەی چات", error: "هەڵەیەک ڕوویدا. تکایە دووبارە هەوڵ بدەرەوە.", tooBig: "زۆر گەورەیە (تا 500 MB)", filesAdded: "{n} فایل هەڵبژێردرا",
+           cancelled: "هەڵوەشاوە", teethNone: "هیچ دیاری نەکراوە" },
+    kmr: { newCase: "کەیسێ نوو", myCases: "کەیسێن من", balance: "حساب", doctor: "دکتۆر", type: "جۆرێ کەیسی", material: "ماددە",
+           shade: "رەنگ", noShade: "پاشان", teeth: "ددان (FDI)", kids: "ددانێن شیری", patient: "ناڤێ نەخۆشی", note: "تێبینی بۆ تاقیگەهێ (ب دلێ خۆ)",
+           files: "وێنە یان فایلێن سکانێ (ب دلێ خۆ)", addFiles: "زێدەکرنا فایلان", send: "فرێکرنا کەیسی", sending: "دهێتە فرێکرن…", needType: "جۆرێ کەیسی هەلبژێرە.", needMaterial: "ماددە هەلبژێرە.",
+           needPatient: "ناڤێ نەخۆشی بنڤیسە.", sent: "کەیسێ {label} هاتە فرێکرن ✓", sentHelp: "د هەر قوناغەکێ دا نامەیەکا تەلەگرامێ دێ بۆ تە هێت.",
+           uploading: "ئەپلۆد دبیت {p}%", saving: "پاشەکەفت دبیت…", done: "هاتە زێدەکرن ✓", failed: "سەرنەکەفت", retry: "دووبارە هەول بدە", close: "گرتن",
+           another: "فرێکرنا کەیسەکێ دی", noCases: "هێشتا چ کەیس نینن.", back: "زڤڕین", stages: "قوناغ", files2: "فایل", noFiles: "هێشتا چ فایل نینن.",
+           created: "هاتە فرێکرن", due: "دەمێ تەسلیمێ", owed: "قەرز", notLinked: "بەری هەمیێ چاتا بۆتی ڤەکە و ژمارا تەلەفۆنا خۆ پارڤە بکە.",
+           openChat: "ڤەکرنا چاتێ", error: "خەلەتیەک چێبوو. هیڤیە دووبارە هەول بدە.", tooBig: "گەلەک مەزنە (هەتا 500 MB)", filesAdded: "{n} فایل هاتنە هەلبژارتن",
+           cancelled: "هەلوەشیای", teethNone: "چ نەهاتینە دیارکرن" },
+    tr: { newCase: "Yeni vaka", myCases: "Vakalarım", balance: "Bakiye", doctor: "Doktor", type: "Vaka türü", material: "Malzeme",
+          shade: "Renk", noShade: "Sonra", teeth: "Dişler (FDI)", kids: "Süt dişleri", patient: "Hasta adı", note: "Laboratuvar için not (isteğe bağlı)",
+          files: "Fotoğraf veya tarama dosyaları (isteğe bağlı)", addFiles: "Dosya ekle", send: "Vakayı gönder", sending: "Gönderiliyor…", needType: "Vaka türü seçin.", needMaterial: "Malzeme seçin.",
+          needPatient: "Hasta adını yazın.", sent: "{label} vakası gönderildi ✓", sentHelp: "Her aşamada Telegram mesajı alacaksınız.",
+          uploading: "Yükleniyor %{p}", saving: "Kaydediliyor…", done: "Eklendi ✓", failed: "Başarısız", retry: "Tekrar dene", close: "Kapat",
+          another: "Başka vaka gönder", noCases: "Henüz vaka yok.", back: "Geri", stages: "Aşamalar", files2: "Dosyalar", noFiles: "Henüz dosya yok.",
+          created: "Gönderildi", due: "Teslim", owed: "Borç", notLinked: "Önce botla sohbeti açıp telefon numaranızı paylaşın.",
+          openChat: "Sohbeti aç", error: "Bir sorun oluştu. Lütfen tekrar deneyin.", tooBig: "Çok büyük (en fazla 500 MB)", filesAdded: "{n} dosya seçildi",
+          cancelled: "İptal edildi", teethNone: "Seçilmedi" }
+  };
+
+  var tg = window.Telegram && window.Telegram.WebApp;
+  var initData = (tg && tg.initData) || "";
+  var qs = new URLSearchParams(location.search);
+  var branch = parseInt(qs.get("b"), 10);
+  var lang = "en", t = T.en, me = null;
+  var view = qs.get("v") === "cases" ? "cases" : "new";
+  var MAX = 500 * 1024 * 1024;
+  var main = document.getElementById("main"), top = document.getElementById("top");
+
+  function el(tag, attrs, kids) {
+    var e = document.createElement(tag);
+    if (attrs) for (var k in attrs) {
+      if (k === "text") e.textContent = attrs[k];
+      else if (k === "on") for (var ev in attrs.on) e.addEventListener(ev, attrs.on[ev]);
+      else if (attrs[k] !== null && attrs[k] !== undefined && attrs[k] !== false) e.setAttribute(k, attrs[k] === true ? "" : attrs[k]);
+    }
+    (kids || []).forEach(function (c) { if (c) e.appendChild(typeof c === "string" ? document.createTextNode(c) : c); });
+    return e;
+  }
+  function fmt(s, v) { return s.replace(/\{(\w+)\}/g, function (_, k) { return v[k]; }); }
+  function setLang(l) {
+    lang = T[l] ? l : "en"; t = T[lang];
+    document.documentElement.lang = lang; document.documentElement.dir = RTL[lang] ? "rtl" : "ltr";
+  }
+  function call(url, body) {
+    return fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) })
+      .then(function (r) { return r.json().then(function (j) { j.__status = r.status; return j; }); });
+  }
+  function app(action, extra) {
+    var b = { b: branch, init_data: initData, action: action };
+    for (var k in (extra || {})) b[k] = extra[k];
+    return call(APP, b);
+  }
+  function day(iso) { return iso ? String(iso).slice(0, 10).split("-").reverse().join("/") : ""; }
+  function money(n, d) { return new Intl.NumberFormat("en-US", { maximumFractionDigits: d || 0, minimumFractionDigits: d || 0 }).format(n || 0); }
+  function haptic() { try { tg.HapticFeedback.selectionChanged(); } catch (e) {} }
+
+  // ---- header + tabs ----
+  function header() {
+    top.innerHTML = "";
+    if (!me) return;
+    var name = me.is_clinic ? me.clinic : (me.doctors[0] && me.doctors[0].name) || me.clinic || "";
+    top.appendChild(el("div", { "class": "lab", text: me.lab }));
+    top.appendChild(el("div", { "class": "who", text: name }));
+    var tabs = [["new", t.newCase], ["cases", t.myCases]];
+    if (me.show_balance) tabs.push(["balance", t.balance]);
+    var bar = el("div", { "class": "tabs", role: "tablist" });
+    tabs.forEach(function (x) {
+      bar.appendChild(el("button", { "class": "tab", role: "tab", "aria-selected": String(view === x[0] || (view === "case" && x[0] === "cases")),
+        on: { click: function () { go(x[0]); } } }, [x[1]]));
+    });
+    top.appendChild(bar);
+  }
+
+  function go(v, arg) {
+    view = v; header();
+    try { if (v === "case") tg.BackButton.show(); else tg.BackButton.hide(); } catch (e) {}
+    window.scrollTo(0, 0);
+    if (v === "new") renderNew();
+    else if (v === "cases") renderCases();
+    else if (v === "case") renderCase(arg);
+    else if (v === "balance") renderBalance();
+  }
+
+  // ---- uploads (same flow as iqlabs.online/upload: case-upload + TUS) ----
+  function uploadAll(token, files, listEl) {
+    var chain = Promise.resolve();
+    files.forEach(function (f) {
+      var st = el("span", { "class": "fstate", text: "…" });
+      var bar = el("i");
+      var li = el("li", { "class": "file" }, [el("div", { "class": "fname" }, [f.name, el("div", { "class": "bar" }, [bar])]), st]);
+      listEl.appendChild(li);
+      if (f.size > MAX) { st.textContent = t.tooBig; st.className = "fstate err"; return; }
+      chain = chain.then(function () { return uploadOne(token, f, st, bar, li); });
+    });
+    return chain;
+  }
+  function uploadOne(token, f, st, bar, li) {
+    return call(UPL, { action: "start", token: token, file_name: f.name, size: f.size, content_type: f.type || "application/octet-stream" })
+      .then(function (s) {
+        if (!s.signature) throw new Error(s.error || "start");
+        return new Promise(function (resolve, reject) {
+          var up = new tus.Upload(f, {
+            endpoint: TUS, retryDelays: [0, 3000, 5000, 10000, 20000],
+            headers: { "x-signature": s.signature, apikey: APIKEY },
+            uploadDataDuringCreation: true, removeFingerprintOnSuccess: true, chunkSize: 6 * 1024 * 1024,
+            metadata: { bucketName: s.bucket, objectName: s.path, contentType: f.type || "application/octet-stream", cacheControl: "3600" },
+            onError: reject,
+            onProgress: function (a, b) { var p = Math.round(a / b * 100); bar.style.width = p + "%"; st.textContent = fmt(t.uploading, { p: p }); },
+            onSuccess: function () { resolve(s.upload_id); }
+          });
+          up.start();
+        });
+      })
+      .then(function (id) {
+        st.textContent = t.saving;
+        return call(UPL, { action: "finish", token: token, upload_id: id });
+      })
+      .then(function (r) {
+        if (r.error) throw new Error(r.error);
+        bar.style.width = "100%"; st.textContent = t.done; st.className = "fstate ok";
+      })
+      .catch(function () {
+        st.textContent = t.failed; st.className = "fstate err";
+        var retry = el("button", { "class": "toggle", type: "button", text: t.retry, on: { click: function () {
+          retry.remove(); st.className = "fstate"; uploadOne(token, f, st, bar, li);
+        } } });
+        li.querySelector(".fname").appendChild(retry);
+      });
+  }
+
+  // ---- New case ----
+  var form = null;
+  function freshForm() {
+    return { doctor: me.doctors[0] ? me.doctors[0].id : null, type: null, material: null, shade: null,
+             adult: {}, child: {}, kids: false, patient: "", note: "", files: [], error: "" };
+  }
+
+  function chipRow(items, current, onPick) {
+    var row = el("div", { "class": "chips" });
+    items.forEach(function (it) {
+      row.appendChild(el("button", { type: "button", "class": "chip", "aria-pressed": String(it.id === current),
+        on: { click: function () { haptic(); onPick(it.id); } } }, [it.name]));
+    });
+    return row;
+  }
+
+  function toothBtn(n, on, mid, onTap) {
+    return el("button", { type: "button", "class": "tooth" + (mid ? " mid" : ""), "aria-pressed": String(!!on), "aria-label": String(n),
+      on: { click: function () { haptic(); onTap(n); } } }, [String(n)]);
+  }
+
+  function chart() {
+    var wrap = el("div", { "class": "chart" });
+    function jaw(left, right, set, kid) {
+      var row = el("div", { "class": "jaw" + (kid ? " kid" : "") });
+      left.concat(right).forEach(function (n, i) {
+        row.appendChild(toothBtn(n, set[n], i === left.length, function (x) { set[x] = !set[x]; renderNew(); }));
+      });
+      return row;
+    }
+    function range(a, b) { var r = []; if (a > b) for (var i = a; i >= b; i--) r.push(i); else for (var j = a; j <= b; j++) r.push(j); return r; }
+    wrap.appendChild(jaw(range(18, 11), range(21, 28), form.adult));
+    wrap.appendChild(el("div", { "class": "mline" }));
+    wrap.appendChild(jaw(range(48, 41), range(31, 38), form.adult));
+    if (form.kids) {
+      wrap.appendChild(el("div", { "class": "spacer" }));
+      wrap.appendChild(jaw(range(55, 51), range(61, 65), form.child, true));
+      wrap.appendChild(el("div", { "class": "mline" }));
+      wrap.appendChild(jaw(range(85, 81), range(71, 75), form.child, true));
+    }
+    return wrap;
+  }
+
+  function picked(set) { return Object.keys(set).filter(function (k) { return set[k]; }).map(Number); }
+
+  function renderNew() {
+    if (!form) form = freshForm();
+    main.innerHTML = "";
+    var types = me.catalog || [];
+    var type = types.filter(function (x) { return x.id === form.type; })[0];
+
+    if (me.doctors.length > 1) {
+      main.appendChild(el("div", { "class": "card" }, [el("p", { "class": "label", text: t.doctor }),
+        chipRow(me.doctors, form.doctor, function (id) { form.doctor = id; renderNew(); })]));
+    }
+    main.appendChild(el("div", { "class": "card" }, [el("p", { "class": "label", text: t.type }),
+      chipRow(types, form.type, function (id) {
+        form.type = id;
+        var ty = types.filter(function (x) { return x.id === id; })[0];
+        var def = ty && (ty.materials.filter(function (m) { return m.is_default; })[0] || (ty.materials.length === 1 ? ty.materials[0] : null));
+        form.material = def ? def.id : null; form.shade = null; renderNew();
+      })]));
+
+    if (type && type.materials.length > 1) {
+      main.appendChild(el("div", { "class": "card" }, [el("p", { "class": "label", text: t.material }),
+        chipRow(type.materials, form.material, function (id) { form.material = id; form.shade = null; renderNew(); })]));
+    }
+    if (type && type.uses_shade) {
+      var shades = type.shades.filter(function (s) { return s.material_id === null || s.material_id === form.material; });
+      if (shades.length) {
+        main.appendChild(el("div", { "class": "card" }, [el("p", { "class": "label", text: t.shade }),
+          chipRow([{ id: null, name: t.noShade }].concat(shades), form.shade, function (id) { form.shade = id; renderNew(); })]));
+      }
+    }
+
+    var teethCount = picked(form.adult).length + picked(form.child).length;
+    main.appendChild(el("div", { "class": "card" }, [
+      el("p", { "class": "label" }, [t.teeth + " · ", el("span", { "class": "ltr", text: teethCount ? String(teethCount) : t.teethNone })]),
+      chart(),
+      el("button", { type: "button", "class": "toggle", on: { click: function () { form.kids = !form.kids; renderNew(); } } }, [(form.kids ? "− " : "+ ") + t.kids])
+    ]));
+
+    var pat = el("input", { type: "text", maxlength: "200", value: form.patient, on: { input: function (e) { form.patient = e.target.value; } } });
+    var note = el("textarea", { maxlength: "1900", on: { input: function (e) { form.note = e.target.value; } } });
+    note.value = form.note;
+    main.appendChild(el("div", { "class": "card" }, [el("p", { "class": "label", text: t.patient }), pat,
+      el("div", { "class": "spacer" }), el("p", { "class": "label", text: t.note }), note]));
+
+    var input = el("input", { type: "file", multiple: true, style: "display:none", on: { change: function (e) {
+      form.files = form.files.concat(Array.prototype.slice.call(e.target.files)); renderNew();
+    } } });
+    main.appendChild(el("div", { "class": "card" }, [el("p", { "class": "label", text: t.files }),
+      form.files.length ? el("ul", null, form.files.map(function (f, i) {
+        return el("li", { "class": "file" }, [el("span", { "class": "fname", text: f.name }),
+          el("button", { type: "button", "class": "toggle", text: "✕", "aria-label": "remove", on: { click: function () { form.files.splice(i, 1); renderNew(); } } })]);
+      })) : null,
+      input,
+      el("button", { type: "button", "class": "btn ghost", on: { click: function () { input.click(); } } }, ["+ " + t.addFiles])]));
+
+    var send = el("button", { type: "button", "class": "btn", on: { click: submit } }, [t.send]);
+    main.appendChild(send);
+    if (form.error) main.appendChild(el("p", { "class": "err", role: "alert", text: form.error }));
+  }
+
+  function submit() {
+    if (!form.type) { form.error = t.needType; return renderNew(); }
+    var ty = (me.catalog || []).filter(function (x) { return x.id === form.type; })[0];
+    if (ty && ty.materials.length > 1 && !form.material) { form.error = t.needMaterial; return renderNew(); }
+    if (!form.patient.trim()) { form.error = t.needPatient; return renderNew(); }
+    form.error = "";
+    var btn = main.querySelector(".btn:not(.ghost)");
+    btn.disabled = true; btn.textContent = t.sending;
+    app("create", { doctor_id: form.doctor, case_type_id: form.type, material_id: form.material, shade_id: form.shade,
+                    adult_teeth: picked(form.adult), child_teeth: picked(form.child), patient_ref: form.patient, note: form.note })
+      .then(function (r) {
+        if (!r.case_label) throw new Error(r.error || "create");
+        try { tg.HapticFeedback.notificationOccurred("success"); } catch (e) {}
+        var files = form.files; form = null;
+        main.innerHTML = "";
+        var list = el("ul");
+        main.appendChild(el("div", { "class": "card center" }, [el("b", { style: "font-size:18px", text: fmt(t.sent, { label: r.case_label }) }),
+          el("p", { "class": "muted", text: t.sentHelp })]));
+        if (files.length) main.appendChild(el("div", { "class": "card" }, [list]));
+        main.appendChild(el("button", { type: "button", "class": "btn", on: { click: function () { try { tg.close(); } catch (e) {} } } }, [t.close]));
+        main.appendChild(el("div", { "class": "spacer" }));
+        main.appendChild(el("button", { type: "button", "class": "btn ghost", on: { click: function () { go("new"); } } }, [t.another]));
+        if (files.length) uploadAll(r.upload_token, files, list);
+      })
+      .catch(function (e) {
+        form.error = t.error + (e && e.message && e.message !== "create" ? " (" + e.message + ")" : "");
+        renderNew();
+      });
+  }
+
+  // ---- My cases ----
+  function renderCases() {
+    main.innerHTML = "";
+    main.appendChild(el("div", { "class": "center muted", text: "…" }));
+    app("cases").then(function (r) {
+      main.innerHTML = "";
+      var list = r.cases || [];
+      if (!list.length) { main.appendChild(el("div", { "class": "card center muted", text: t.noCases })); return; }
+      list.forEach(function (c) {
+        main.appendChild(el("button", { type: "button", "class": "case", on: { click: function () { go("case", c.id); } } }, [
+          el("div", { "class": "row" }, [el("b", { "class": "ltr", text: c.case_label }), el("span", { "class": "muted ltr", text: day(c.created_at) })]),
+          el("div", null, [(c.patient_ref || "—") + " · " + (c.type || "") + (me.doctors.length > 1 && c.doctor ? " · " + c.doctor : "")]),
+          el("span", { "class": "stage" + (c.stage_terminal ? " done" : ""), text: c.cancelled ? t.cancelled : (c.stage || "") })
+        ]));
+      });
+    }).catch(function () { main.innerHTML = ""; main.appendChild(el("p", { "class": "err", text: t.error })); });
+  }
+
+  function renderCase(id) {
+    main.innerHTML = "";
+    main.appendChild(el("div", { "class": "center muted", text: "…" }));
+    app("case", { case_id: id }).then(function (c) {
+      if (!c.case_label) throw new Error("x");
+      main.innerHTML = "";
+      var teeth = (c.adult_teeth || []).concat(c.child_teeth || []);
+      main.appendChild(el("div", { "class": "card" }, [
+        el("div", { "class": "kv" }, [el("b", { "class": "ltr", text: c.case_label }), el("span", { "class": "muted ltr", text: day(c.created_at) })]),
+        el("div", { "class": "kv" }, [el("span", { text: t.patient }), el("span", { text: c.patient_ref || "—" })]),
+        el("div", { "class": "kv" }, [el("span", { text: t.type }), el("span", { text: [c.type, c.material, c.shade].filter(Boolean).join(" · ") })]),
+        teeth.length ? el("div", { "class": "kv" }, [el("span", { text: t.teeth }), el("span", { "class": "ltr", text: teeth.join(", ") })]) : null,
+        c.due_date ? el("div", { "class": "kv" }, [el("span", { text: t.due }), el("span", { "class": "ltr", text: day(c.due_date) })]) : null
+      ]));
+      var steps = el("div", { "class": "steps" });
+      var reached = true;
+      (c.pipeline || []).forEach(function (p) {
+        var cls = p.current ? "now" : reached ? "past" : "";
+        if (p.current) reached = false;
+        steps.appendChild(el("div", { "class": "step " + cls }, [el("i"), el("span", { text: p.name })]));
+      });
+      // Not in the pipeline yet (still a request): nothing is "past".
+      if (!(c.pipeline || []).some(function (p) { return p.current; })) {
+        Array.prototype.forEach.call(steps.children, function (s) { s.className = "step"; });
+        steps.insertBefore(el("div", { "class": "step now" }, [el("i"), el("span", { text: c.stage || "" })]), steps.firstChild);
+      }
+      main.appendChild(el("div", { "class": "card" }, [el("p", { "class": "label", text: t.stages }), steps]));
+
+      var flist = el("ul");
+      (c.files || []).forEach(function (f) {
+        flist.appendChild(el("li", { "class": "file" }, [el("span", { "class": "fname", text: f.name }), el("span", { "class": "fstate ltr", text: day(f.at) })]));
+      });
+      var input = el("input", { type: "file", multiple: true, style: "display:none", on: { change: function (e) {
+        var files = Array.prototype.slice.call(e.target.files);
+        if (!files.length) return;
+        app("upload", { case_id: c.id }).then(function (r) { if (r.upload_token) uploadAll(r.upload_token, files, flist); });
+      } } });
+      main.appendChild(el("div", { "class": "card" }, [el("p", { "class": "label", text: t.files2 }),
+        (c.files || []).length ? null : el("p", { "class": "muted", text: t.noFiles }), flist, el("div", { "class": "spacer" }), input,
+        el("button", { type: "button", "class": "btn ghost", on: { click: function () { input.click(); } } }, ["+ " + t.addFiles])]));
+    }).catch(function () { main.innerHTML = ""; main.appendChild(el("p", { "class": "err", text: t.error })); });
+  }
+
+  // ---- Balance (only when the lab turned it on) ----
+  function renderBalance() {
+    main.innerHTML = "";
+    app("balance").then(function (r) {
+      (r.balances || []).forEach(function (x) {
+        main.appendChild(el("div", { "class": "card" }, [
+          el("p", { "class": "label", text: (me.doctors.length > 1 ? x.doctor + " · " : "") + t.owed }),
+          el("div", { "class": "big", text: money(x.owed, x.decimals) + " " + (x.currency || "") })
+        ]));
+      });
+      if (!(r.balances || []).length) main.appendChild(el("p", { "class": "err", text: t.error }));
+    }).catch(function () { main.appendChild(el("p", { "class": "err", text: t.error })); });
+  }
+
+  // ---- start ----
+  if (tg) {
+    try { tg.ready(); tg.expand(); tg.BackButton.onClick(function () { go("cases"); }); } catch (e) {}
+  }
+  setLang((tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.language_code) || "en");
+  if (!initData || !branch) {
+    main.innerHTML = ""; main.appendChild(el("div", { "class": "card center", text: t.notLinked }));
+    return;
+  }
+  app("me").then(function (r) {
+    if (r.language) setLang(r.language);
+    if (!r.linked) {
+      main.innerHTML = "";
+      main.appendChild(el("div", { "class": "card center" }, [el("p", { text: t.notLinked }),
+        el("button", { type: "button", "class": "btn", on: { click: function () { try { tg.close(); } catch (e) {} } } }, [t.openChat])]));
+      return;
+    }
+    me = r;
+    if (!me.doctors.length) { main.innerHTML = ""; main.appendChild(el("div", { "class": "card center", text: t.notLinked })); return; }
+    go(view);
+  }).catch(function () { main.innerHTML = ""; main.appendChild(el("p", { "class": "err", text: t.error })); });
+})();
+</script>
+</body>
+</html>
