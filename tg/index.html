@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex">
 <title>IQ Labs</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700&display=swap" media="print" onload="this.media='all'">
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 /* Telegram Mini App for doctors (v292): New case / My cases / Balance.
@@ -81,9 +81,25 @@ ul { padding: 0; margin: 0; }
 </head>
 <body>
 <div class="top" id="top"></div>
-<main id="main"><div class="center muted">…</div></main>
+<main id="main"><div class="center" id="boot" style="color:#8a8fa8">Loading…</div></main>
+<script>
+// Shows any script error on screen and sends it to the server log, so a blank
+// page can always be diagnosed.
+window.__tgReport = function (msg) {
+  try {
+    var b = new URLSearchParams(location.search).get("b");
+    fetch("https://efjeeeztckovmtuzvefp.supabase.co/functions/v1/telegram-app", { method: "POST",
+      headers: { "Content-Type": "text/plain" }, body: JSON.stringify({ b: Number(b), action: "log", message: String(msg).slice(0, 500),
+      ua: navigator.userAgent.slice(0, 200), tg: !!(window.Telegram && window.Telegram.WebApp) }) });
+  } catch (e) {}
+};
+window.addEventListener("error", function (e) {
+  var m = (e && e.message) || "error"; window.__tgReport(m + " @" + (e && e.lineno));
+  var el = document.getElementById("main");
+  if (el) el.innerHTML = '<div class="center" style="color:#c0392b">Error: ' + m.replace(/[<>&]/g, "") + "</div>";
+});
+</script>
 
-<script src="https://cdn.jsdelivr.net/npm/tus-js-client@4.1.0/dist/tus.min.js"></script>
 <script>
 (function () {
   var APP = "https://efjeeeztckovmtuzvefp.supabase.co/functions/v1/telegram-app";
@@ -217,8 +233,20 @@ ul { padding: 0; margin: 0; }
     });
     return chain;
   }
+  var tusReady = null;
+  function loadTus() {
+    if (window.tus) return Promise.resolve();
+    if (!tusReady) tusReady = new Promise(function (res, rej) {
+      var sc = document.createElement("script");
+      sc.src = "https://cdn.jsdelivr.net/npm/tus-js-client@4.1.0/dist/tus.min.js";
+      sc.onload = res; sc.onerror = function () { tusReady = null; rej(new Error("tus")); };
+      document.head.appendChild(sc);
+    });
+    return tusReady;
+  }
   function uploadOne(token, f, st, bar, li) {
-    return call(UPL, { action: "start", token: token, file_name: f.name, size: f.size, content_type: f.type || "application/octet-stream" })
+    return loadTus().then(function () { return call(UPL, { action: "start", token: token, file_name: f.name, size: f.size, content_type: f.type || "application/octet-stream" })
+      ; })
       .then(function (s) {
         if (!s.signature) throw new Error(s.error || "start");
         return new Promise(function (resolve, reject) {
@@ -469,7 +497,12 @@ ul { padding: 0; margin: 0; }
     main.innerHTML = ""; main.appendChild(el("div", { "class": "card center", text: t.notLinked }));
     return;
   }
+  var watchdog = setTimeout(function () {
+    window.__tgReport("me timeout");
+    main.innerHTML = ""; main.appendChild(el("div", { "class": "card center", text: t.error }));
+  }, 12000);
   app("me").then(function (r) {
+    clearTimeout(watchdog);
     if (r.language) setLang(r.language);
     if (!r.linked) {
       main.innerHTML = "";
@@ -480,7 +513,10 @@ ul { padding: 0; margin: 0; }
     me = r;
     if (!me.doctors.length) { main.innerHTML = ""; main.appendChild(el("div", { "class": "card center", text: t.notLinked })); return; }
     go(view);
-  }).catch(function () { main.innerHTML = ""; main.appendChild(el("p", { "class": "err", text: t.error })); });
+  }).catch(function (e) {
+    clearTimeout(watchdog); window.__tgReport("me failed: " + (e && e.message));
+    main.innerHTML = ""; main.appendChild(el("p", { "class": "err", text: t.error }));
+  });
 })();
 </script>
 </body>
