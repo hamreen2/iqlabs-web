@@ -95,6 +95,10 @@ window.__tgReport = function (msg) {
 };
 window.addEventListener("error", function (e) {
   var m = (e && e.message) || "error"; window.__tgReport(m + " @" + (e && e.lineno));
+  // "Script error." = another site's script (Telegram's own helper throws one when a
+  // minimized page is brought back) -- logged only. And a page that already
+  // loaded is never replaced by an error message.
+  if (/^Script error\.?$/.test(m) || window.__tgBooted) return;
   var el = document.getElementById("main");
   if (el) el.innerHTML = '<div class="center" style="color:#c0392b">Error: ' + m.replace(/[<>&]/g, "") + "</div>";
 });
@@ -507,7 +511,7 @@ window.addEventListener("error", function (e) {
     main.innerHTML = ""; main.appendChild(el("div", { "class": "card center", text: t.error }));
   }, 45000);
   app("me").then(function (r) {
-    clearTimeout(watchdog); clearTimeout(slowNote);
+    clearTimeout(watchdog); clearTimeout(slowNote); window.__tgBooted = true;
     if (r.language) setLang(r.language);
     if (!r.linked) {
       main.innerHTML = "";
