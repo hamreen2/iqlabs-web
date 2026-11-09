@@ -193,15 +193,15 @@ window.addEventListener("error", function (e) {
   // getToken (optional) returns a Promise of the case's upload token; on Telegram Desktop it powers
   // "Add files in your browser" (the same one-case upload page the bot links to), next to a drop zone.
   function fileButton(onFiles, getToken) {
-    if (!isTgDesktop) {
-      var input = el("input", { type: "file", multiple: true, on: { change: function (e) {
-        var files = Array.prototype.slice.call(e.target.files);
-        if (files.length) onFiles(files);
-        try { e.target.value = ""; } catch (x) {}
-      } } });
-      return el("div", null, [el("label", { "class": "btn ghost filebtn" }, ["+ " + t.addFiles, input])]);
-    }
-    var kids = [];
+    var input = el("input", { type: "file", multiple: true, on: { change: function (e) {
+      var files = Array.prototype.slice.call(e.target.files);
+      if (files.length) onFiles(files);
+      try { e.target.value = ""; } catch (x) {}
+    } } });
+    if (!isTgDesktop) return el("div", null, [el("label", { "class": "btn ghost filebtn" }, ["+ " + t.addFiles, input])]);
+    // TEMPORARY (2026-11-09): the real input is also shown on Telegram Desktop, labelled "(test)", to learn
+    // whether it can open a picker there. Remove this line (or keep it, if it works) after the owner's test.
+    var kids = [el("label", { "class": "btn ghost filebtn" }, ["+ " + t.addFiles + " (test)", input]), el("div", { "class": "spacer" })];
     if (getToken) kids.push(browserUploadButton(getToken));
     var zone = el("div", { "class": "drop", text: t.dropHere, on: {
       dragover: function (e) { e.preventDefault(); zone.className = "drop over"; },
