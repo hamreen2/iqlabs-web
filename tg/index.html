@@ -121,7 +121,7 @@ window.addEventListener("error", function (e) {
   var T = {
     en: { newCase: "New case", myCases: "My cases", balance: "Balance", doctor: "Doctor", type: "Case type", material: "Material",
           shade: "Shade", noShade: "Later", teeth: "Teeth (FDI)", kids: "Primary teeth", patient: "Patient name", note: "Note for the lab (optional)",
-          files: "Photos or scan files (optional)", addFiles: "Add files", dropHere: "Drop files here", send: "Send case", sending: "Sending…", needType: "Choose a case type.", needMaterial: "Choose a material.",
+          files: "Photos or scan files (optional)", addFiles: "Add files", openBrowser: "Add files in your browser", dropHere: "Drop files here", send: "Send case", sending: "Sending…", needType: "Choose a case type.", needMaterial: "Choose a material.",
           needPatient: "Enter the patient's name.", sent: "Case {label} was sent ✓", sentHelp: "You'll get a Telegram message at every stage.",
           uploading: "Uploading {p}%", saving: "Saving…", done: "Added ✓", failed: "Failed", retry: "Try again", close: "Close",
           another: "Send another case", noCases: "No cases yet.", back: "Back", stages: "Stages", files2: "Files", noFiles: "No files yet.",
@@ -130,7 +130,7 @@ window.addEventListener("error", function (e) {
           cancelled: "Cancelled", teethNone: "None chosen", slow: "Slow connection, still trying…" },
     ar: { newCase: "حالة جديدة", myCases: "حالاتي", balance: "الحساب", doctor: "الطبيب", type: "نوع الحالة", material: "المادة",
           shade: "اللون", noShade: "لاحقاً", teeth: "الأسنان (FDI)", kids: "الأسنان اللبنية", patient: "اسم المريض", note: "ملاحظة للمختبر (اختياري)",
-          files: "صور أو ملفات المسح (اختياري)", addFiles: "إضافة ملفات", dropHere: "اسحب الملفات وأفلتها هنا", send: "إرسال الحالة", sending: "جارٍ الإرسال…", needType: "اختر نوع الحالة.", needMaterial: "اختر المادة.",
+          files: "صور أو ملفات المسح (اختياري)", addFiles: "إضافة ملفات", openBrowser: "إضافة ملفات في المتصفح", dropHere: "اسحب الملفات وأفلتها هنا", send: "إرسال الحالة", sending: "جارٍ الإرسال…", needType: "اختر نوع الحالة.", needMaterial: "اختر المادة.",
           needPatient: "اكتب اسم المريض.", sent: "أُرسلت الحالة {label} ✓", sentHelp: "ستصلك رسالة على تيليجرام في كل مرحلة.",
           uploading: "جارٍ الرفع {p}%", saving: "جارٍ الحفظ…", done: "أُضيف ✓", failed: "فشل", retry: "إعادة المحاولة", close: "إغلاق",
           another: "إرسال حالة أخرى", noCases: "لا توجد حالات بعد.", back: "رجوع", stages: "المراحل", files2: "الملفات", noFiles: "لا توجد ملفات بعد.",
@@ -139,7 +139,7 @@ window.addEventListener("error", function (e) {
           cancelled: "ملغاة", teethNone: "لم يُحدَّد", slow: "الاتصال بطيء، ما زلنا نحاول…" },
     ckb: { newCase: "کەیسی نوێ", myCases: "کەیسەکانم", balance: "حساب", doctor: "پزیشک", type: "جۆری کەیس", material: "ماددە",
            shade: "ڕەنگ", noShade: "دواتر", teeth: "ددانەکان (FDI)", kids: "ددانی شیری", patient: "ناوی نەخۆش", note: "تێبینی بۆ تاقیگە (ئارەزوومەندانە)",
-           files: "وێنە یان فایلی سکان (ئارەزوومەندانە)", addFiles: "زیادکردنی فایل", dropHere: "فایلەکان لێرە دابنێ", send: "ناردنی کەیس", sending: "دەنێردرێت…", needType: "جۆری کەیس هەڵبژێرە.", needMaterial: "ماددە هەڵبژێرە.",
+           files: "وێنە یان فایلی سکان (ئارەزوومەندانە)", addFiles: "زیادکردنی فایل", openBrowser: "زیادکردنی فایل لە وێبگەڕدا", dropHere: "فایلەکان لێرە دابنێ", send: "ناردنی کەیس", sending: "دەنێردرێت…", needType: "جۆری کەیس هەڵبژێرە.", needMaterial: "ماددە هەڵبژێرە.",
            needPatient: "ناوی نەخۆش بنووسە.", sent: "کەیسی {label} نێردرا ✓", sentHelp: "لە هەر قۆناغێکدا نامەیەکی تەلەگرامت بۆ دێت.",
            uploading: "ئەپڵۆد دەکرێت {p}%", saving: "پاشەکەوت دەکرێت…", done: "زیاد کرا ✓", failed: "سەرنەکەوت", retry: "دووبارە هەوڵبدەرەوە", close: "داخستن",
            another: "ناردنی کەیسێکی تر", noCases: "هێشتا هیچ کەیسێک نییە.", back: "گەڕانەوە", stages: "قۆناغەکان", files2: "فایلەکان", noFiles: "هێشتا هیچ فایلێک نییە.",
@@ -148,7 +148,7 @@ window.addEventListener("error", function (e) {
            cancelled: "هەڵوەشاوە", teethNone: "هیچ دیاری نەکراوە", slow: "پەیوەندی خاوە، هێشتا هەوڵ دەدەین…" },
     kmr: { newCase: "کەیسێ نوو", myCases: "کەیسێن من", balance: "حساب", doctor: "دکتۆر", type: "جۆرێ کەیسی", material: "ماددە",
            shade: "رەنگ", noShade: "پاشان", teeth: "ددان (FDI)", kids: "ددانێن شیری", patient: "ناڤێ نەخۆشی", note: "تێبینی بۆ تاقیگەهێ (ب دلێ خۆ)",
-           files: "وێنە یان فایلێن سکانێ (ب دلێ خۆ)", addFiles: "زێدەکرنا فایلان", dropHere: "فایلان هنگێ دانێ", send: "فرێکرنا کەیسی", sending: "دهێتە فرێکرن…", needType: "جۆرێ کەیسی هەلبژێرە.", needMaterial: "ماددە هەلبژێرە.",
+           files: "وێنە یان فایلێن سکانێ (ب دلێ خۆ)", addFiles: "زێدەکرنا فایلان", openBrowser: "زێدەکرنا فایلان د وێبگەڕێ دا", dropHere: "فایلان هنگێ دانێ", send: "فرێکرنا کەیسی", sending: "دهێتە فرێکرن…", needType: "جۆرێ کەیسی هەلبژێرە.", needMaterial: "ماددە هەلبژێرە.",
            needPatient: "ناڤێ نەخۆشی بنڤیسە.", sent: "کەیسێ {label} هاتە فرێکرن ✓", sentHelp: "د هەر قوناغەکێ دا نامەیەکا تەلەگرامێ دێ بۆ تە هێت.",
            uploading: "ئەپلۆد دبیت {p}%", saving: "پاشەکەفت دبیت…", done: "هاتە زێدەکرن ✓", failed: "سەرنەکەفت", retry: "دووبارە هەول بدە", close: "گرتن",
            another: "فرێکرنا کەیسەکێ دی", noCases: "هێشتا چ کەیس نینن.", back: "زڤڕین", stages: "قوناغ", files2: "فایل", noFiles: "هێشتا چ فایل نینن.",
@@ -157,7 +157,7 @@ window.addEventListener("error", function (e) {
            cancelled: "هەلوەشیای", teethNone: "چ نەهاتینە دیارکرن", slow: "پەیوەندی هێدیە، هێشتا هەول ددەین…" },
     tr: { newCase: "Yeni vaka", myCases: "Vakalarım", balance: "Bakiye", doctor: "Doktor", type: "Vaka türü", material: "Malzeme",
           shade: "Renk", noShade: "Sonra", teeth: "Dişler (FDI)", kids: "Süt dişleri", patient: "Hasta adı", note: "Laboratuvar için not (isteğe bağlı)",
-          files: "Fotoğraf veya tarama dosyaları (isteğe bağlı)", addFiles: "Dosya ekle", dropHere: "Dosyaları buraya bırakın", send: "Vakayı gönder", sending: "Gönderiliyor…", needType: "Vaka türü seçin.", needMaterial: "Malzeme seçin.",
+          files: "Fotoğraf veya tarama dosyaları (isteğe bağlı)", addFiles: "Dosya ekle", openBrowser: "Dosyaları tarayıcıda ekle", dropHere: "Dosyaları buraya bırakın", send: "Vakayı gönder", sending: "Gönderiliyor…", needType: "Vaka türü seçin.", needMaterial: "Malzeme seçin.",
           needPatient: "Hasta adını yazın.", sent: "{label} vakası gönderildi ✓", sentHelp: "Her aşamada Telegram mesajı alacaksınız.",
           uploading: "Yükleniyor %{p}", saving: "Kaydediliyor…", done: "Eklendi ✓", failed: "Başarısız", retry: "Tekrar dene", close: "Kapat",
           another: "Başka vaka gönder", noCases: "Henüz vaka yok.", back: "Geri", stages: "Aşamalar", files2: "Dosyalar", noFiles: "Henüz dosya yok.",
@@ -185,12 +185,15 @@ window.addEventListener("error", function (e) {
     (kids || []).forEach(function (c) { if (c) e.appendChild(typeof c === "string" ? document.createTextNode(c) : c); });
     return e;
   }
-  // Telegram Desktop for Windows does not open a file picker from a Mini App -- not from a hidden input,
-  // a real visible one, nor a label (all tried 2026-11-09 on the owner PC; the same page works in Telegram
-  // Web, a browser and the phone apps). There the choice is a DROP ZONE instead (dropping a file works).
+  // Telegram Desktop for Windows does not open a file picker from an <input type=file> in a Mini App (hidden,
+  // visible or in a label -- all tried 2026-11-09 on the owner PC; the same page works in Telegram Web, a
+  // browser and the phone apps). There: a drop zone (dropping a file works) plus TWO TEST BUTTONS (2026-11-11):
+  //   A = showOpenFilePicker() (a different mechanism from the input), B = the one-case upload page in the real browser.
+  // The loser is removed after the owner tries them.
   var isTgDesktop = !!(tg && tg.platform === "tdesktop");
-  // onFiles gets the chosen File[]. Elsewhere: a button that is really a file input (see .filebtn).
-  function fileButton(onFiles) {
+  var UPLOAD_PAGE = "https://iqlabs.online/upload/";
+  // onFiles gets the chosen File[]. getToken (optional) returns a Promise of the case upload token.
+  function fileButton(onFiles, getToken) {
     if (!isTgDesktop) {
       var input = el("input", { type: "file", multiple: true, on: { change: function (e) {
         var files = Array.prototype.slice.call(e.target.files);
@@ -199,6 +202,8 @@ window.addEventListener("error", function (e) {
       } } });
       return el("div", null, [el("label", { "class": "btn ghost filebtn" }, ["+ " + t.addFiles, input])]);
     }
+    var kids = [pickerTestButton(onFiles), el("div", { "class": "spacer" })];
+    if (getToken) { kids.push(browserUploadButton(getToken)); kids.push(el("div", { "class": "spacer" })); }
     var zone = el("div", { "class": "drop", text: t.dropHere, on: {
       dragover: function (e) { e.preventDefault(); zone.className = "drop over"; },
       dragleave: function () { zone.className = "drop"; },
@@ -207,7 +212,35 @@ window.addEventListener("error", function (e) {
         var files = Array.prototype.slice.call((e.dataTransfer && e.dataTransfer.files) || []);
         if (files.length) onFiles(files);
       } } });
-    return el("div", null, [zone]);
+    kids.push(zone);
+    return el("div", null, kids);
+  }
+  // TEST A. The line under the button tells what happened (nothing at all = the click was swallowed).
+  function pickerTestButton(onFiles) {
+    var b = el("button", { type: "button", "class": "btn ghost" }, ["+ " + t.addFiles + " (test A)"]);
+    var msg = el("p", { "class": "muted" });
+    b.addEventListener("click", function () {
+      if (!window.showOpenFilePicker) { msg.textContent = "A: showOpenFilePicker is not available here"; return; }
+      msg.textContent = "A: opening the picker...";
+      window.showOpenFilePicker({ multiple: true }).then(function (hs) {
+        return Promise.all(hs.map(function (h) { return h.getFile(); }));
+      }).then(function (files) { msg.textContent = ""; if (files.length) onFiles(files); })
+        .catch(function (e) { msg.textContent = (e && e.name === "AbortError") ? "" : "A: " + (e && e.name) + " - " + (e && e.message); });
+    });
+    return el("div", null, [b, msg]);
+  }
+  // TEST B.
+  function browserUploadButton(getToken) {
+    var b = el("button", { type: "button", "class": "btn ghost" }, ["+ " + t.openBrowser + " (test B)"]);
+    b.addEventListener("click", function () {
+      b.disabled = true;
+      Promise.resolve(getToken()).then(function (token) {
+        if (!token) throw new Error("token");
+        var url = UPLOAD_PAGE + "#" + token;
+        try { tg.openLink(url); } catch (e) { window.open(url, "_blank"); }
+      }).catch(function () { /* the case view shows its own errors */ }).then(function () { b.disabled = false; });
+    });
+    return b;
   }
   function fmt(s, v) { return s.replace(/\{(\w+)\}/g, function (_, k) { return v[k]; }); }
   function setLang(l) {
@@ -438,6 +471,7 @@ window.addEventListener("error", function (e) {
         main.appendChild(el("div", { "class": "card center" }, [el("b", { style: "font-size:18px", text: fmt(t.sent, { label: r.case_label }) }),
           el("p", { "class": "muted", text: t.sentHelp })]));
         if (files.length) main.appendChild(el("div", { "class": "card" }, [list]));
+        if (isTgDesktop) { var tk = r.upload_token; main.appendChild(browserUploadButton(function () { return tk; })); main.appendChild(el("div", { "class": "spacer" })); }
         main.appendChild(el("button", { type: "button", "class": "btn", on: { click: function () { try { tg.close(); } catch (e) {} } } }, [t.close]));
         main.appendChild(el("div", { "class": "spacer" }));
         main.appendChild(el("button", { type: "button", "class": "btn ghost", on: { click: function () { go("new"); } } }, [t.another]));
@@ -503,7 +537,7 @@ window.addEventListener("error", function (e) {
         (c.files || []).length ? null : el("p", { "class": "muted", text: t.noFiles }), flist, el("div", { "class": "spacer" }),
         fileButton(function (files) {
           app("upload", { case_id: c.id }).then(function (r) { if (r.upload_token) uploadAll(r.upload_token, files, flist); });
-        })]));
+        }, function () { return app("upload", { case_id: c.id }).then(function (r) { return r.upload_token; }); })]));
     }).catch(function () { main.innerHTML = ""; main.appendChild(el("p", { "class": "err", text: t.error })); });
   }
 
