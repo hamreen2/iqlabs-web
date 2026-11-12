@@ -49381,7 +49381,8 @@ this.c=c},
 Zu:function Zu(a){this.a=a},
 aAR:function aAR(){var _=this
 _.at=_.as=_.Q=_.z=_.y=_.x=_.w=null
-_.CW=_.ch=_.ay=_.ax=!1
+_.ch=_.ay=_.ax=!1
+_.CW=!0
 _.d=$
 _.c=_.a=null},
 cb5:function cb5(a,b){this.a=a
@@ -51982,7 +51983,8 @@ _.f=_.e=_.d=!1
 _.r=null
 _.w=d
 _.x=!1
-_.z=_.y=null},
+_.z=_.y=null
+_.Q=!0},
 bbj:function bbj(){},
 bb5:function bb5(a,b){this.a=a
 this.b=b},
@@ -203646,7 +203648,8 @@ $0(){return this.a.ch=!0},
 $S:0}
 A.cbs.prototype={
 $0(){var s=this.a
-s.CW=s.ch=!1},
+s.ch=!1
+s.CW=!0},
 $S:0}
 A.cbL.prototype={
 $2(a,b){var s,r,q,p,o,n=this,m=null,l=b.b
@@ -217045,6 +217048,7 @@ bVz(a4,a5,a6,a7,a8,a9,b0){var s=0,r=A.j(t.D),q,p=this,o,n,m,l,k,j,i,h,g,f,e,d,c,
 var $async$vE=A.e(function(b1,b2){if(b1===1)return A.f(b2,r)
 for(;;)switch(s){case 0:p.x=a6.Q
 p.z=a9
+p.Q=!(a5.k2||a5.k3)
 o=J.ar(b0)
 s=o.ga2(b0)?3:5
 break
@@ -217273,7 +217277,9 @@ if(b4&&a9.xr.gA(0)===0&&a2.length!==0)a2=new A.kn(B.qa,null,null,p.bR0(a2,p.x?p.
 else a2=new A.FF(B.qu,B.qa,A.en(p.aGR(a2,b5,a9.xr),!1,B.bMh,null,B.dJ))
 B.e.q(f,A.a([new A.aD(null,4,null),new A.lS(B.Iw,A.iI(A.a([new A.aD(70,null,l),A.pg(a2)],i),B.b2,B.aw,B.as))],i))}f.push(A.i4(B.hk,p.x?10:16,0.75))
 if(a9.cx){a2=t.s
-B.e.q(f,A.a([p.xh("Margin design",A.a(["Porcelain","Metal"],a2)),p.xh("Contact design",A.a(["Line","Point"],a2)),p.xh("Pontic design",A.a(["Ridge Lap","Ovoid","Saddle","Hygienic"],a2)),p.xh("Age / Sex",A.a(["Male","Female"],a2))],i))}f.push(A.i4(B.hk,p.x?10:16,0.75))
+i=A.a([p.xh("Margin design",A.a(["Porcelain","Metal"],a2)),p.xh("Contact design",A.a(["Line","Point"],a2)),p.xh("Pontic design",A.a(["Ridge Lap","Ovoid","Saddle","Hygienic"],a2))],i)
+if(p.Q)i.push(p.xh("Age / Sex",A.a(["Male","Female"],a2)))
+B.e.q(f,i)}f.push(A.i4(B.hk,p.x?10:16,0.75))
 f.push(p.aRL(A.a([a9],t.y5),b0))
 q=f
 s=1
@@ -217395,7 +217401,9 @@ else B.e.q(b0,b3)
 B.e.q(a9,b0)}a8.push(A.iI(A.a([A.pg(A.cH(a9,B.bi,B.aw,B.as)),new A.aD(10,null,null),A.acI(new A.Ey(null,B.nB),"https://iqlabs.online/#/cases/"+B.e.gX(b8).a+"?scan=1&group=1",!1,a1,a1)],b2),B.bi,B.aw,B.as))
 a8.push(A.i4(B.hk,p.x?10:16,0.75))
 if(B.e.bL(b8,new A.bb2())){a9=t.s
-B.e.q(a8,A.a([p.xh("Margin design",A.a(["Porcelain","Metal"],a9)),p.xh("Contact design",A.a(["Line","Point"],a9)),p.xh("Pontic design",A.a(["Ridge Lap","Ovoid","Saddle","Hygienic"],a9)),p.xh("Age / Sex",A.a(["Male","Female"],a9))],b2))}a8.push(A.i4(B.hk,p.x?10:16,0.75))
+b2=A.a([p.xh("Margin design",A.a(["Porcelain","Metal"],a9)),p.xh("Contact design",A.a(["Line","Point"],a9)),p.xh("Pontic design",A.a(["Ridge Lap","Ovoid","Saddle","Hygienic"],a9))],b2)
+if(p.Q)b2.push(p.xh("Age / Sex",A.a(["Male","Female"],a9)))
+B.e.q(a8,b2)}a8.push(A.i4(B.hk,p.x?10:16,0.75))
 a8.push(p.aRL(b8,b9))
 q=a8
 s=1
@@ -223395,7 +223403,7 @@ n=A.o(a,B.p,t.J)
 n.toString
 p=A.aY(o,o,o,o,B.apH,o,o,o,new A.cdC(this,a,b),o,o,o,o,n.gEu(),o)
 n=new A.cdD(this,a)
-if(this.f)return new A.R(B.fj,A.L(A.a([A.h3(A.cf(!1,A.al(100),!0,q,o,!0,o,o,o,o,o,o,o,o,o,o,o,n,o,o,o,o,o,o,o),"v0.1.39+112",o),B.a9,p],t.p),B.y,B.q,B.t,0,B.u),o)
+if(this.f)return new A.R(B.fj,A.L(A.a([A.h3(A.cf(!1,A.al(100),!0,q,o,!0,o,o,o,o,o,o,o,o,o,o,o,n,o,o,o,o,o,o,o),"v0.1.39+113",o),B.a9,p],t.p),B.y,B.q,B.t,0,B.u),o)
 m=t.p
 return new A.R(B.IA,A.Z(A.a([A.a8(A.cf(!1,A.al(10),!0,A.Z(A.a([q,B.cN,A.a8(A.L(A.a([A.d(l,o,o,B.G,o,o,B.l7,o,o,o),B.ai5],m),B.w,B.q,B.Z,0,B.u),1)],m),B.y,B.q,B.t,0,o),o,!0,o,o,o,o,o,o,o,o,o,o,o,n,o,o,o,o,o,o,o),1),p],m),B.y,B.q,B.t,0,o),o)}}
 A.cdC.prototype={
@@ -246854,7 +246862,7 @@ B.a_=new A.a1C(1,"ltr")
 B.a8R=new A.J(!0,B.aj,null,null,null,null,10,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null)
 B.G=new A.PZ(2,"ellipsis")
 B.bR9=new A.cT("app-version-label",t.kK)
-B.bOq=new A.jN("v0.1.39+112",null,B.a8R,null,null,null,B.G,null,1,null,B.bR9)
+B.bOq=new A.jN("v0.1.39+113",null,B.a8R,null,null,null,B.G,null,1,null,B.bR9)
 B.ai5=new A.oc(B.a_,B.bOq,null)
 B.ai6=new A.t7(1,"horizontal")
 B.Ic=new A.t7(2,"endToStart")
